@@ -1,7 +1,7 @@
 import { CRUD } from "@/common/crud.interface";
 import UsersDao from "@/users/dao/users.dao";
 
-class UserService implements CRUD {
+class UsersService implements CRUD {
   async create(resource: any) {
     return UsersDao.addUser(resource);
   }
@@ -32,4 +32,4 @@ class UserService implements CRUD {
   }
 }
 
-export default new UserService();
+export default new UsersService();
