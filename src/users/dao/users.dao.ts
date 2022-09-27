@@ -20,7 +20,7 @@ class UsersDao {
     return user.id
   }
 
-  async getUsrs() {
+  async getUsers() {
     return this.users
   }
 
