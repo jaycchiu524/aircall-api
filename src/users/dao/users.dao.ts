@@ -49,7 +49,9 @@ class UsersDao {
 
   async getUserById(userId: string) {
     // populate() is used to replace the _id field in the user object with the actual user object
-    return this.User.findOne({_id: userId}).populate('User').exec();
+    // @link: https://mongoosejs.com/docs/migrating_to_6.html#strictpopulate
+    // return this.User.findOne({_id: userId}).populate('User').exec(); <-- this is wrong by mongoose v6
+    return this.User.findOne({_id: userId}).exec();
   }
 
   async getUsers(limit = 25, page = 0) {
