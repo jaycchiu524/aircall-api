@@ -1,8 +1,10 @@
 const path = require("path")
 
 module.exports= {
+  mode: "development",
   target: 'node',
   entry: "./src/app.ts",
+  externals : ['mongodb-client-encryption'],
   module: {
     rules: [
       {
@@ -26,5 +28,4 @@ module.exports= {
     filename: 'app.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  mode: "development"
 }

@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import debug from 'debug';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const log: debug.IDebugger = debug('app:mongoose-service');
 
@@ -23,13 +25,13 @@ class MongooseService {
   connectWithRetry() {
     log('MongoDB connection with retry');
 
-    if(!process.env.MONGODB_URI) {
-      log('MongoDB connection failed: MONGODB_URI is not defined');
+    if(!process.env.DATABASE_URL) {
+      log('MongoDB connection failed: DATABASE_URL is not defined');
       return
     }
 
     mongoose
-      .connect(process.env.MONGODB_URI, this.mongooseOptions)
+      .connect(process.env.DATABASE_URL, this.mongooseOptions)
       .then(() => {
         log('MongoDB is connected');
       })
