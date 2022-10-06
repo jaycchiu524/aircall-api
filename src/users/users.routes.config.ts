@@ -2,6 +2,11 @@ import { CommonRouteConfig } from "../common/common.routes.config";
 import UsersController from "./controllers/users.controller";
 import UsersMiddleware from "./middlewares/users.middlewares";
 import express from "express";
+import { body } from "express-validator";
+import BodyValidationMiddleware from "@/common/middlewares/body.validation.middleware";
+
+// Be sure to add BodyValidationMiddleware.verifyBodyFieldsErrors in every route 
+// after any body() lines that are present, otherwise none of them will have an effect.
 
 export class UserRoutes extends CommonRouteConfig {
   constructor(app: express.Application) {
@@ -13,7 +18,11 @@ export class UserRoutes extends CommonRouteConfig {
       .route("/users")
       .get(UsersController.listUsers)
       .post(
-        UsersMiddleware.validateRequiredUserBodyFields,
+        body('email').isEmail(),
+        body('password')
+          .isLength({ min: 5 })
+          .withMessage('Minimum length is 5+ characters'),
+        BodyValidationMiddleware.verifyBodyFieldsErrors,
         UsersMiddleware.validateSameEmailDoesntExist,
         UsersController.createUser
       );
@@ -28,12 +37,27 @@ export class UserRoutes extends CommonRouteConfig {
       .delete(UsersController.removeUser);
 
     this.app.put(`/users/:userId`, [
-      UsersMiddleware.validateRequiredUserBodyFields,
+      body('email').isEmail(),
+      body('password')
+        .isLength({ min: 5 })
+        .withMessage('Minimum length is 5+ characters'),
+      body('firstName').isString(),
+      body('lastName').isString(),
+      body('permissionFlags').isInt(),
+      BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailBelongToSameUser,
       UsersController.put,
     ])
 
     this.app.patch(`/users/:userId`, [
+      body('email').isEmail().optional(),
+      body('password')
+        .isLength({ min: 5 })
+        .withMessage('Minimum length is 5+ characters').optional(),
+      body('firstName').isString().optional(),
+      body('lastName').isString().optional(),
+      body('permissionFlags').isInt().optional(),
+      BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validatePatchEmail,
       UsersController.patch,
     ])

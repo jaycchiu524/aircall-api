@@ -20,21 +20,6 @@ class UsersMiddleware {
     next();
   }
 
-  async validateRequiredUserBodyFields(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    // Request body must contain email and password
-    if (req.body && req.body.email && req.body.password) {
-      next();
-    } else {
-      res.status(400).send({
-        error: `Missing required fields email and password`,
-      });
-    }
-  }
-
   async validateSameEmailDoesntExist(
     req: Request,
     res: Response,
