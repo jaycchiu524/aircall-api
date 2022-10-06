@@ -42,4 +42,12 @@ curl --include --request PATCH "localhost:3000/users/$REST_API_EXAMPLE_ID" \
 # DELETE
 curl --include --request DELETE "localhost:3000/users/$REST_API_EXAMPLE_ID" \
 --header 'Content-Type: application/json'
+
+# LOGIN
+curl --request POST 'localhost:3000/auth' \ 
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "password":"chelsea520",
+    "email":"jay@jaychiu.me"   
+}'
 ```

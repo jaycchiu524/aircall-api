@@ -7,6 +7,13 @@ import cors from 'cors'
 import { CommonRouteConfig } from '@/common/common.routes.config'
 import { UserRoutes } from '@/users/users.routes.config'
 import debug from 'debug'
+import dotenv from 'dotenv'
+import { AuthRoutes } from './auth/auth.routes.config'
+
+const dotenvResult = dotenv.config();
+if(dotenvResult.error) {
+  throw dotenvResult.error;
+}
 
 const app: express.Application = express()
 const server: http.Server = http.createServer(app)
@@ -41,7 +48,7 @@ app.use(expressWinston.logger(loggerOptions))
 
 // Add the UserRoutes to our array,
 // after sending the Express.js application object to have the routes added to our app
-routes.push(new UserRoutes(app))
+routes.push(new UserRoutes(app), new AuthRoutes(app))
 
 // route to ake sure everything is working properly
 const runningMessage = `Server running at http://localhost:${port}`

@@ -28,6 +28,13 @@ class UsersDao {
 
   constructor() {}
 
+  /** Get password by email */
+  async getUserByEmailWithPassword(email: string) {
+    return this.User.findOne({email: email})
+      .select('_id email permissionFlags +password')
+      .exec();
+  }
+
   async addUser(userFields: CreateUserDto) {
     const userId = shortid.generate();
     const user = new this.User({
