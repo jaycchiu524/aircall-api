@@ -37,6 +37,7 @@ class AuthController {
       })
     } catch (err) {
       log('createJWT error: %o', err)
+      return res.status(500).send(err)
     }
   } 
 }
