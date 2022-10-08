@@ -11,8 +11,11 @@ class AuthMiddleware {
     if(user) {
       const passwordHash = user.password;
       if(passwordHash && await argon2.verify(passwordHash, req.body.password)) {
+        // Get rid of password
+        // JWT is not a good place to store sensitive data, 
+        // so we don't want to store the password in the JWT
         req.body = {
-          userId: user.id,
+          userId: user._id,
           email: user.email,
           permissionFlags: user.permissionFlags
         };

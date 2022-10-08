@@ -3,9 +3,12 @@ import express, {Request, Response, NextFunction} from 'express';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { Jwt } from '@/common/types/jwt';
+import debug from 'debug';
 
 //@ts-expect-error
 const jwtSecret: string = process.env.JWT_SECRET;
+
+const log: debug.IDebugger = debug('jwt-middleware');
 
 class JwtMiddleware {
   verifyRefreshBodyField(
@@ -28,6 +31,17 @@ class JwtMiddleware {
     next: NextFunction
   ) {
     const user: any = await usersService.getUserByEmailWithPassword(
+      /** From accessToken 
+       * "jwt":{
+         "email":"jaycchiu524@gmail.com",
+         "permissionFlags":1,
+         "refreshKey":[
+            "Object"
+         ],
+         "iat":1665120988,
+         "exp":1665156988
+      }
+       */
       res.locals.jwt.email
     )
 
@@ -70,7 +84,14 @@ class JwtMiddleware {
         if(authorization[0] !== 'Bearer') {
           return res.status(401).send();
         } else {
-          // Verify the token
+          // Verify the token is valid
+          /**
+           * type Jwt = {
+           * refreshKey: string;
+           * userId: string;
+           * permissionFlags: number;
+           * email: string;
+           */
           res.locals.jwt = jwt.verify(
             authorization[1],
             jwtSecret
