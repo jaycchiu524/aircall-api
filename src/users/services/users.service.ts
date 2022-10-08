@@ -1,10 +1,11 @@
 import { CRUD } from "@/common/crud.interface";
 import UsersDao from "@/users/dao/users.dao";
+import { CreateUserDto } from "../dto/create.user.dto";
 import { PatchUserDto } from "../dto/patch.user.dto";
 import { PutUserDto } from "../dto/put.user.dto";
 
 class UsersService implements CRUD {
-  async create(resource: any) {
+  async create(resource: CreateUserDto) {
     return UsersDao.addUser(resource);
   }
 
