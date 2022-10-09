@@ -3,6 +3,7 @@ import usersService from "@/users/services/users.service";
 
 import debug from "debug";
 import argon2 from "argon2";
+import { PatchUserDto } from "../dto/patch.user.dto";
 
 const log: debug.IDebugger = debug("app: in-memory-dao");
 
@@ -43,6 +44,17 @@ class UserController {
     const result = await usersService.deleteById(req.body.id);
     log(result);
     res.status(204).send();
+  }
+
+  async updatePermissions(req: Request, res: Response) {
+    const permissionDto: PatchUserDto = {
+      permissionFlags: parseInt(req.params.permissions),
+    } 
+
+    log('parseInt(req.params.permissions): %o', parseInt(req.params.permissions))
+    const result = await usersService.patchById(req.body.id, permissionDto);
+    log(result)
+    res.status(204).send(); 
   }
 }
 

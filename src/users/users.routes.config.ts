@@ -57,7 +57,7 @@ export class UserRoutes extends CommonRouteConfig {
         .withMessage('Minimum length is 5+ characters'),
       body('firstName').isString(),
       body('lastName').isString(),
-      body('permissionFlags').isInt(),
+      // body('permissionFlags').isInt(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailBelongToSameUser,
       UsersMiddleware.userCantChangePermission,
@@ -82,6 +82,20 @@ export class UserRoutes extends CommonRouteConfig {
         PermissionFlag.PAID_PERMISSION
       ),
       UsersController.patch,
+    ])
+
+    this.app.put(`/users/:userId/permissions/:permissions`, [
+      jwtMiddleware.validJWTNeeded,
+      permissionMiddleware.onlySameUserOrAdminCanDoThisAction,
+
+      // Note: The above two pieces of middleware are needed despite
+      // the reference to them in the .all() call, because that only covers
+      // /users/:userId, not anything beneath it in the hierarchy
+
+      permissionMiddleware.permissionFlagRequired(
+        PermissionFlag.FREE_PERMISSION
+      ),
+      UsersController.updatePermissions,
     ])
     return this.app;
   }

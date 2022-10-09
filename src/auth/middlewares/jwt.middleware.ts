@@ -100,6 +100,7 @@ class JwtMiddleware {
         }
       } catch(err) {
         // 403: Forbidden (The request was valid, but the server is refusing action)
+        log(err);
         return res.status(403).send();
       }
     } else {

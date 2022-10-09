@@ -78,7 +78,7 @@ class UsersMiddleware {
     next: NextFunction
   ) {
     if (req.body.permissionFlags) {
-      res.status(400).send({ error: `Permission flags can't be changed` });
+      res.status(400).send({ errors: ['User cannot change permission flags'] });
     } else {
       next();
     }
