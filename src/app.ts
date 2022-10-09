@@ -9,6 +9,7 @@ import { UserRoutes } from '@/users/users.routes.config'
 import debug from 'debug'
 import dotenv from 'dotenv'
 import { AuthRoutes } from './auth/auth.routes.config'
+import helmet from 'helmet'
 
 const dotenvResult = dotenv.config();
 if(dotenvResult.error) {
@@ -27,6 +28,9 @@ app.use(express.json())
 
 // Add middleware to allow cors
 app.use(cors())
+
+// Add helmet middleware to secure Express apps by setting various HTTP headers
+app.use(helmet())
 
 // Prepare the expressWinston logging middleware configuration,
 // which will automatically log all HTTP requests handle by Express.js
