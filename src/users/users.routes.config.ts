@@ -4,6 +4,9 @@ import UsersMiddleware from "./middlewares/users.middlewares";
 import express from "express";
 import { body } from "express-validator";
 import BodyValidationMiddleware from "@/common/middlewares/body.validation.middleware";
+import jwtMiddleware from "@/auth/middlewares/jwt.middleware";
+import permissionMiddleware from "@/common/middlewares/common.permission.middleware";
+import { PermissionFlag } from "@/common/middlewares/common.permissionflag.enum";
 
 // Be sure to add BodyValidationMiddleware.verifyBodyFieldsErrors in every route 
 // after any body() lines that are present, otherwise none of them will have an effect.
@@ -16,7 +19,14 @@ export class UserRoutes extends CommonRouteConfig {
   configureRoutes() {
     this.app
       .route("/users")
-      .get(UsersController.listUsers)
+      .get(
+        /** Only admin can view all users */
+        jwtMiddleware.validJWTNeeded,
+        permissionMiddleware.permissionFlagRequired(
+          PermissionFlag.ADMIN_PERMISSION
+        ),
+        UsersController.listUsers
+      )
       .post(
         body('email').isEmail(),
         body('password')
@@ -32,7 +42,11 @@ export class UserRoutes extends CommonRouteConfig {
 
     this.app
       .route("/users/:userId")
-      .all(UsersMiddleware.validateUserExists)
+      .all(
+        UsersMiddleware.validateUserExists,
+        jwtMiddleware.validJWTNeeded,
+        permissionMiddleware.onlySameUserOrAdminCanDoThisAction
+      )
       .get(UsersController.getUserById)
       .delete(UsersController.removeUser);
 
