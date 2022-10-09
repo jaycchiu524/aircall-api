@@ -61,7 +61,7 @@ class JwtMiddleware {
     // Reference: auth.controller.ts
     if(hash === req.body.refreshToken) {
       req.body = {
-        userId: user.id,
+        userId: user._id,
         email: user.email,
         permissionFlags: user.permissionFlags
       }

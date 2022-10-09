@@ -153,7 +153,7 @@ describe('users and auth endpoints', () => {
                   password: requestBody.password,
                   firstName: newFirstName2,
                   lastName: newLastName2,
-                  permissionFlags: 2,
+                  // permissionFlags: 2,
               });
           expect(res.status).to.equal(204);
       });
