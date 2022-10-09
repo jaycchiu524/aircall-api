@@ -1,10 +1,11 @@
 const path = require("path")
+const nodeExternals = require("webpack-node-externals")
 
 module.exports= {
   mode: "development",
   target: 'node',
   entry: "./src/app.ts",
-  externals : ['mongodb-client-encryption'],
+  externals : ['mongodb-client-encryption', nodeExternals()],
   module: {
     rules: [
       {
