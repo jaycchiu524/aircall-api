@@ -60,6 +60,10 @@ export class UserRoutes extends CommonRouteConfig {
       body('permissionFlags').isInt(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailBelongToSameUser,
+      UsersMiddleware.userCantChangePermission,
+      permissionMiddleware.permissionFlagRequired(
+        PermissionFlag.PAID_PERMISSION
+      ),
       UsersController.put,
     ])
 
@@ -73,6 +77,10 @@ export class UserRoutes extends CommonRouteConfig {
       body('permissionFlags').isInt().optional(),
       BodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validatePatchEmail,
+      UsersMiddleware.userCantChangePermission,
+      permissionMiddleware.permissionFlagRequired(
+        PermissionFlag.PAID_PERMISSION
+      ),
       UsersController.patch,
     ])
     return this.app;
