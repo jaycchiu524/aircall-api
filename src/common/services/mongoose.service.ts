@@ -7,12 +7,19 @@ const log: debug.IDebugger = debug('app:mongoose-service');
 
 class MongooseService {
   private count = 0;
-  private mongooseOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-    useFindAndModify: false,
-  }
+
+  /**
+   * useNewUrlParser, useUnifiedTopology, useFindAndModify, and useCreateIndex are no longer supported options. 
+   * Mongoose 6 always behaves as if useNewUrlParser, useUnifiedTopology, and useCreateIndex are true, 
+   * and useFindAndModify is false. Please remove these options from your code.
+   */
+
+  // private mongooseOptions = {
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true,
+  //   serverSelectionTimeoutMS: 5000,
+  //   useFindAndModify: false,
+  // }
 
   constructor() {
     this.connectWithRetry();
@@ -30,14 +37,19 @@ class MongooseService {
       return
     }
 
+    log(process.env.DATABASE_URL)
+
     mongoose
-      .connect(process.env.DATABASE_URL, this.mongooseOptions)
+      .connect(process.env.DATABASE_URL)
       .then(() => {
         log('MongoDB is connected');
       })
       .catch((err) => {
+        log(err)
         log('MongoDB connection unsuccessful, retry after 5 seconds. ', ++this.count);
-        setTimeout(this.connectWithRetry, 5000);
+        setTimeout(() => {
+          this.connectWithRetry()
+        }, 5000);
       });
   }
 }
